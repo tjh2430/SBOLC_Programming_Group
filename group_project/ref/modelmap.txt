@@ -1,0 +1,26 @@
+Gamemap (static)
+	Name (str)
+	Regions (FK)
+	url to HTML Map (str)
+	
+Region
+	Territories (FK)
+	Bonus (int)
+	
+Territories
+	Adjacent Territories (FK)
+	Owner (FK)
+	Strength (int)
+	
+Gamestate
+	uniqueID (autoID)
+	Gamemap (instant)
+	players (FK)
+	Ruleset (FK)
+	
+Player
+	name (str)
+	color (str)
+	
+Ruleset = config file?
+	

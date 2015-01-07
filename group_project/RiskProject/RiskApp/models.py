@@ -1,11 +1,24 @@
 from django.db import models
 
-class Question(models.Model):
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
+# Create your models here.
 
+class Player (models.Model):
+	userName = models.CharField(max_length=32)
+	def __str__(self):
+		return self.userName
 
-class Choice(models.Model):
-    question = models.ForeignKey(Question)
-    choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
+class Game (models.Model):
+	gameID=models.AutoField(primary_key=True)
+	players=models.ManyToManyField(Player)
+	gameMap=models.ManyToManyField("Territory")
+	def __str__(self):
+		return "game"+str(self.gameID)
+
+class Territory (models.Model):
+	gameID = models.ForeignKey(Game, verbose_name="game")
+	name = models.CharField(max_length=32)
+	strength = models.SmallIntegerField()
+	owner = models.ForeignKey(Player, verbose_name="owner")	
+	adjacent = models.ManyToManyField("self")
+	def __str__(self):
+		return str(self.gameID)+"_"+self.name
