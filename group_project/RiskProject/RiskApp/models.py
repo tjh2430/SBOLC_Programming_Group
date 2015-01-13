@@ -1,11 +1,12 @@
 from django.db import models
 
-#Map Objects
-
 class Territory (models.Model):
 
 	#Name of territory
 	name = models.CharField(max_length=32)
+
+	#Region it lives under
+	region = models.CharField(max_length=32)
 	
 	#Which territories can units move to?
 	adjacent = models.ManyToManyField(Territory)
@@ -19,26 +20,14 @@ class Territory (models.Model):
 	def __str__(self):
 		return self.name+'('+self.owner+')'
 	
-class Region (models.Model):
-	
-	#Name of region
-	name = models.CharField(max_length=32)
-	
-	#Territories that are members of this region
-	territories = models.ManyToManyField(Territory)
-
-	#How many extra soldiers is total ownership worth?
-	bonus = models.SmallIntegerField()
-	
-	def __str__(self):
-		return self.name
 
 class TerritoryCard (models.Model):
 
 	#Territory
 	name = models.ForeignKey(Territory)
 
-	#TODO: Isn't each card supposed to have a Infantry/Cavalry/Artillery icon as well?
+	# "Infantry","Cavalry", or "Artillery" (Base game rules)
+	type = models.CharField(max_length=32)
 
 class GameMap (models.Model):
 
@@ -68,21 +57,7 @@ class GameInstance (models.Model):
 
 	#TODO: Add methods (How to access attributes of FK objects)
 	
-#TODO: How to make interface in Python
-#class RuleSet
 
-class ActionHandler (models.Model):
-	rules = models.ForeignKey(RuleSet)
-	#TODO: Isn't it more appropriate to make this a FK?
-	playerID = models.CharField(max_length=32)
-	gameContext = models.ForeignKey(GameContext)
-
-	#TODO: class methods
-
-class GameAction (models.Model):
-	#TODO: Shouldn't there be a link to the ActionHandler?
-
-	
 class Player (models.Model):
 	
 	#Copied from unique user account name
