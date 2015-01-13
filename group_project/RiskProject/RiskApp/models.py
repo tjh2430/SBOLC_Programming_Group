@@ -33,7 +33,56 @@ class Region (models.Model):
 	def __str__(self):
 		return self.name
 
+class TerritoryCard (models.Model):
 
+	#Territory
+	name = models.ForeignKey(Territory)
+
+	#TODO: Isn't each card supposed to have a Infantry/Cavalry/Artillery icon as well?
+
+class GameMap (models.Model):
+
+	#Name of map type	
+	mapTitle = models.CharField(max_length=32)
+
+	#Regions contained within map
+	regions = models.ManyToManyField(Region)
+	
+	#All territories within map
+	territoryGraph = models.ManyToManyField(Territory)
+
+	#Link to map image to be used
+	gameMapFileURL = models.URLField(max_length=200)
+
+	#TODO: No equivalent of a text list, unless we want a separate object for colors, perhaps have colors separated by spaces to parse it better
+	availablePlayerColors = models.CharField(max_length=200)
+	
+	def __init__(self):
+		return self.mapTitle
+	
+class GameInstance (models.Model):
+	ruleSet = models.ForeignKey(RuleSet)
+	players = models.ManyToManyField(Player)
+	gameMap = models.ForeignKey(GameMap)
+	context = models.ForeignKey(GameContext)
+
+	#TODO: Add methods (How to access attributes of FK objects)
+	
+#TODO: How to make interface in Python
+#class RuleSet
+
+class ActionHandler (models.Model):
+	rules = models.ForeignKey(RuleSet)
+	#TODO: Isn't it more appropriate to make this a FK?
+	playerID = models.CharField(max_length=32)
+	gameContext = models.ForeignKey(GameContext)
+
+	#TODO: class methods
+
+class GameAction (models.Model):
+	#TODO: Shouldn't there be a link to the ActionHandler?
+
+	
 class Player (models.Model):
 	
 	#Copied from unique user account name
@@ -42,6 +91,9 @@ class Player (models.Model):
 	#Dependent on GameMap specs
 	color = models.CharField(max_length=32)
 	
+	#Territory cards owned by player
+	cards = models.ManyToManyField(TerritoryCard)
+
 	def __str__(self):
 		return self.userName+'('+self.color+')'
 
